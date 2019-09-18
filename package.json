@@ -1,0 +1,19 @@
+{
+  "name": "access-rest-api",
+  "version": "1.0.0",
+  "description": "User Access API",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  },
+  "scripts": {
+    "test": " echo \" Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
+  },
+  "author": "Hasan Tareque",
+  "license": "ISC"
+}
