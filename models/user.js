@@ -3,27 +3,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    client_id: {
-        type: Number,
-        required: true
-    },
-    role_id: {
-        type: Number,
-        required: false
-    },
-    name: {
-        title: String,
-        first: { type: String, required: true },
-        last: { type: String, required: true },
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
+    client_id: { type: Number, required: true },
+    role_id: { type: Number, required: false },
+    title: String,
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
     created: { 
         at: { type: Date, default: Date.now },
         by: { type: Number, default: null }
