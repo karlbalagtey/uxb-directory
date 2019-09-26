@@ -10,8 +10,14 @@ const userRoutes = require('./routes/users');
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(userRoutes);
-app.use('/', (req, res, next) => {
-    res.send("<h1>Hello from UXB London.</h1>");
+
+/**
+ * Unspecifed request
+ */
+app.use((req, res, next) => {
+    res.status(404).send({
+        'err' : 'Unspecified request'
+    });
 });
 
 const server = http.createServer(app);

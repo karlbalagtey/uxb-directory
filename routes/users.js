@@ -1,42 +1,33 @@
 const express = require('express');
 
 const router = express.Router();
+const userController = require('../controllers/users');
 
 /**
  * Supply a specified user
  */
-router.get('/users/:userId', (req, res, next) => {
-    res.send("<p>Specified user</p>");
-});
+router.get('/users/:userId', userController.getUser);
 
 /**
  * Supply the list of all users
  */
-router.use('/users', (req, res, next) => {
-    res.send("<p>All users</p>");
-});
+router.get('/users', userController.getUsers);
 
 /**
  * Store newly created user  
  */ 
-router.post('/users', (req, res, next) => {
-    res.send("<p>Store a user</p>");
-});
+router.post('/users', userController.storeUser);
 
 
 /**
  * Update a specified user 
  */
-router.put('/users/:userId', (req, res, next) => {
-    res.send("<p>Update a specified user</p>");
-});
+router.put('/users/:userId', userController.updateUser);
 
 
 /**
  * Delete a specifed user
  */
-router.use('/users/:userId', (req, res, next) => {
-    res.send("<p>Delete a specified user</p>");
-});
+router.use('/users/:userId', userController.deleteUser);
 
 module.exports = router;
