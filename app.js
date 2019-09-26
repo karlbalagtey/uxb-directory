@@ -1,5 +1,6 @@
 const http = require('http');
 const bodyParser = require('body-parser');
+const mongoConnect = require('./util/database').mongoConnect;
 
 const express = require('express');
 
@@ -22,4 +23,9 @@ app.use((req, res, next) => {
 
 const server = http.createServer(app);
 
-server.listen(3000);
+mongoConnect(() => {
+    server.listen(3000);
+});
+
+
+
