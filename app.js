@@ -1,6 +1,6 @@
 const http = require('http');
 const bodyParser = require('body-parser');
-const mongoConnect = require('./util/database').mongoConnect;
+const mongoose = require('mongoose');
 
 const express = require('express');
 
@@ -21,10 +21,13 @@ app.use((req, res, next) => {
     });
 });
 
-const server = http.createServer(app);
+//const server = http.createServer(app);
 
-mongoConnect(() => {
-    server.listen(3000);
+mongoose.connect('mongodb+srv://hmtareque:hasan076@cluster0-mhyrp.mongodb.net/uxb_directory?retryWrites=true&w=majority')
+.then(result => {
+    app.listen(3000);
+}).catch(err => {
+    console.log(err);
 });
 
 
