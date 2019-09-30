@@ -10,6 +10,7 @@ const userSchema = new Schema({
     last_name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    status: { type: String, default: 'active'},
     created: { 
         at: { type: Date, default: Date.now },
         by: { type: Number, default: null }

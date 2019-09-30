@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 
-const userRoutes = require('./routes/users');
+const userRoutes = require('./routes/usersRoute');
 
 app.use(bodyParser.json());
 
+// Routes
 app.use(userRoutes);
 
 /**
@@ -28,6 +29,3 @@ mongoose.connect('mongodb+srv://hmtareque:hasan076@cluster0-mhyrp.mongodb.net/ux
 }).catch(err => {
     console.log(err);
 });
-
-
-
