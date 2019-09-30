@@ -11,18 +11,21 @@ const userSchema = new Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     status: { type: String, default: 'active'},
-    created: { 
-        at: { type: Date, default: Date.now },
-        by: { type: Number, default: null }
-    },
-    updated: { 
-        at: { type: Date, default: null },
-        by: { type: Number, default: null }
-    },
-    deleted: { 
-        at: { type: Date, default: null },
-        by: { type: Number, default: null }
-    },
+    created_at: { type: Date, default: Date.now },
+    created_by: { type: Number, default: null },
+    updated_at: { type: Date, default: null },
+    updated_by: { type: Number, default: null },
+    deleted_at: { type: Date, default: null },
+    deleted_by: { type: Number, default: null }
 });
+
+userSchema.statics = {
+    isValid(id) {
+       return this.findById(id)
+              .then(result => {
+                 if (!result) throw new Error('User not found')
+       })
+    },
+ }
 
 module.exports = mongoose.model('User', userSchema);
