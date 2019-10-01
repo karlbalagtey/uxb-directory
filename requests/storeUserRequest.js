@@ -1,19 +1,23 @@
 const { check, body } = require('express-validator');
+const bcrypt = require('bcryptjs');
+
+// User model
+const User = require('../models/userModel');
 
 /**
- * Validate new user data 
+ * Validate request
  */
 exports.validate = () => {
 
-     return [ 
+    return [
         body('client_id').exists(),
         body('role_id').exists(),
         body('title').optional(),
         body('first_name').exists(),
         body('last_name').exists(),
-        check('email').exists().isEmail(),
-        body('password').exists()
-       ]; 
+        check('email').exists().isEmail().custom(email => User.isEmailAlreadyExist(email)),
+        body('password').exists().isLength({ min: 6 })
+    ];
 }
 
 /**
@@ -21,7 +25,6 @@ exports.validate = () => {
  */
 exports.data = (req) => {
 
-    // create a user in database 
     const client = 1;
     const role = 2;
     const title = req.body.title;
@@ -30,6 +33,8 @@ exports.data = (req) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    var hash = bcrypt.hashSync(password, 8);
+
     const user = {
         client_id: client,
         role_id: role,
@@ -37,10 +42,9 @@ exports.data = (req) => {
         first_name: first_name,
         last_name: last_name,
         email: email,
-        password: password,
+        password: hash,
         created_by: 1
     };
 
     return user;
-
 }

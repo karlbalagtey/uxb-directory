@@ -1,8 +1,10 @@
 const { validationResult } = require('express-validator');
 
+// Requests
 const storeUserRequest = require('../requests/storeUserRequest');
+const updateUserRequest = require('../requests/updateUserRequest');
 
-// User model
+// Models
 const User = require('../models/userModel');
 
 /**
@@ -12,15 +14,15 @@ exports.getUser = (req, res, next) => {
 
     const userId = req.params.userId;
 
-    User.findById(userId)
-    .then(user => {
-        return res.status(200).json(user);
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
+    User.findOne({ "_id": userId, deleted_at: null })
+        .then(user => {
+            return res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
         });
-    });
 }
 
 /**
@@ -28,14 +30,15 @@ exports.getUser = (req, res, next) => {
  */
 exports.getUsers = (req, res, next) => {
 
-    User.find()
-    .then(users => {
-        return res.status(200).json(users);
-    }).catch(err => {
-        res.status(500).json({
-            error: err
+    User.find({ deleted_at: null })
+        .then(users => {
+            return res.status(200).json(users);
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
         });
-    });
 }
 
 /**
@@ -44,15 +47,25 @@ exports.getUsers = (req, res, next) => {
 exports.storeUser = (req, res, next) => {
 
     const errors = validationResult(req);
-    
-    if(errors.isEmpty()) {
+
+    if (errors.isEmpty()) {
+
         const newUser = storeUserRequest.data(req);
         const user = new User(newUser);
-        user.save();
+
+        try {
+            user.save();
+        } catch (err) {
+            res.status(500).json({
+                error: err
+            });
+        }
 
         res.status(201).json({
-            message: 'User created successfully.'
+            message: 'User created successfully.',
+            user: user
         });
+
     } else {
         res.status(422).json(errors);
     }
@@ -66,74 +79,61 @@ exports.updateUser = (req, res, next) => {
 
     const errors = validationResult(req);
 
-    if(errors.isEmpty()) {
-        res.status(200).json({
-            message: 'test'
-        });
+    if (errors.isEmpty()) {
+
+        const userId = req.params.userId;
+        const email = req.body.email;
+
+        User.findById(userId)
+            .then(user => {
+
+                User.findOne({ "_id": { $ne: userId }, email: email, deleted_at: null })
+                    .then(result => {
+                        return result;
+                    })
+                    .then(result => {
+                        if (result) {
+                            res.status(422).json({
+                                errors: {
+                                    msg: "Email already in use",
+                                    param: "email",
+                                    location: "body"
+                                }
+                            });
+                        } else {
+                            try {
+                                const updatedUser = updateUserRequest.data(user, req);
+                                updatedUser.save();
+
+                            } catch (err) {
+                                res.status(500).json({
+                                    errors: err
+                                });
+                            }
+
+                            res.status(200).json({
+                                message: 'User details updated successfully.',
+                                user: updateUser
+                            });
+                        }
+
+                    })
+                    .catch(err => {
+                        res.status(500).json({
+                            errors: err
+                        });
+                    });
+            })
+            .catch(err => {
+                res.status(500).json({
+                    errors: err
+                });
+            });
+
+    } else {
+        res.status(422)
+            .json(errors);
     }
-
-    res.status(200).json({
-        message: errors
-    });
-    
-
-    // res.status(200).json({
-    //     message: 'User updated successfully.'
-    // });
-
-
-    // const errors = validationResult(req);
-    
-    // if(errors.isEmpty()) {
-    //     // const newUser = storeUserRequest.data(req);
-    //     // const user = new User(newUser);
-    //     // user.save();
-
-    //     // res.status(201).json({
-    //     //     message: 'User created successfully.'
-    //     // });
-
-    //     res.status(200).json();
-    // } else {
-    //     res.status(422).json(errors);
-    // }
-
-
-
-
-    // const updated_client = 1;
-    // const updated_role = 2;
-    // const updated_title = req.body.title;
-    // const updated_first_name = req.body.first_name;
-    // const updated_last_name = req.body.last_name;
-    // const updated_email = req.body.email;
-    // const updated_password = req.body.password;
-
-    // const userId = req.params.userId;
-
-    // User.findById(userId)
-    // .then(user => {
-
-    //     user.client_id = updated_client;
-    //     user.role_id = updated_role;
-    //     user.title = updated_title;
-    //     user.first_name = updated_first_name;
-    //     user.last_name = updated_last_name;
-    //     user.email = updated_email;
-    //     user.password = updated_password;
-
-    //     user.save();
-        
-    //     res.status(200).json({
-    //         message: 'User updated successfully.',
-    //         user: user
-    //     });
-    // })
-    // .catch(err => {
-    //     res.status(500).json({
-    //         error: err
-    //     });
-    // });
 }
 
 /**
@@ -143,17 +143,28 @@ exports.deleteUser = (req, res, next) => {
 
     const userId = req.params.userId;
 
-    User.findByIdAndDelete(userId)
-    .then(() => {
-        res.status(200).json({
-            message: 'User deleted successfully.',
-        });
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
-        });
-    });
+    User.findOne({ "_id": userId, deleted_at: null })
+        .then(user => {
 
+            try {
+                user.deleted_at = Date.now();
+                user.deleted_by = 1;
+                user.save();
+            } catch (err) {
+                res.status(404).json({
+                    error: err
+                });
+            }
+
+            res.status(200).json({
+                message: 'User deleted successfully.',
+                user: user
+            });
+        })
+        .catch(err => {
+            res.status(404).json({
+                error: 'User not found'
+            });
+        });
 }
 
