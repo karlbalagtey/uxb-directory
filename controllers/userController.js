@@ -5,6 +5,9 @@ const storeUserRequest = require('../requests/storeUserRequest');
 // User model
 const User = require('../models/userModel');
 
+/**
+ * Returns specified user
+ */
 exports.getUser = (req, res, next) => {
 
     const userId = req.params.userId;
@@ -20,6 +23,9 @@ exports.getUser = (req, res, next) => {
     });
 }
 
+/**
+ * Returns list of all user
+ */
 exports.getUsers = (req, res, next) => {
 
     User.find()
@@ -32,7 +38,9 @@ exports.getUsers = (req, res, next) => {
     });
 }
 
-
+/**
+ * Store new user in the storage 
+ */
 exports.storeUser = (req, res, next) => {
 
     const errors = validationResult(req);
@@ -51,6 +59,9 @@ exports.storeUser = (req, res, next) => {
 }
 
 
+/**
+ * Update specified user details 
+ */
 exports.updateUser = (req, res, next) => {
 
     const errors = validationResult(req);
@@ -125,6 +136,9 @@ exports.updateUser = (req, res, next) => {
     // });
 }
 
+/**
+ * Delete specified user in the storage 
+ */
 exports.deleteUser = (req, res, next) => {
 
     const userId = req.params.userId;

@@ -1,5 +1,8 @@
 const { check, body } = require('express-validator');
 
+/**
+ * Validate new user data 
+ */
 exports.validate = () => {
 
      return [ 
@@ -13,6 +16,9 @@ exports.validate = () => {
        ]; 
 }
 
+/**
+ * New user data 
+ */
 exports.data = (req) => {
 
     // create a user in database 
@@ -24,8 +30,6 @@ exports.data = (req) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    
-
     const user = {
         client_id: client,
         role_id: role,
@@ -34,6 +38,7 @@ exports.data = (req) => {
         last_name: last_name,
         email: email,
         password: password,
+        created_by: 1
     };
 
     return user;
