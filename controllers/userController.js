@@ -157,8 +157,7 @@ exports.deleteUser = (req, res, next) => {
             }
 
             res.status(200).json({
-                message: 'User deleted successfully.',
-                user: user
+                message: 'User deleted successfully.'
             });
         })
         .catch(err => {
