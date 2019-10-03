@@ -35,6 +35,7 @@ mongoose.connect('mongodb+srv://hmtareque:hasan076@cluster0-mhyrp.mongodb.net/ux
     useUnifiedTopology: true
 })
 .then(result => {
+    console.log('server running ...');
     app.listen(3000);
 }).catch(err => {
     console.log(err);
