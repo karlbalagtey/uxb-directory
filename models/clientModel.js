@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const clientSchema = new Schema({
    name: { type: String, required: true },
+   status: { type: String, default: 'active' },
    created_at: { type: Date, default: Date.now() },
    created_by: { type: Number },
    updated_at: { type: Date, default: null },
@@ -21,7 +22,7 @@ clientSchema.statics = {
             }
          })
    },
-   
+
    isNameAlreadyExist(name) {
       return this.exists({ name: name, deleted_at: null })
          .then(client => {
