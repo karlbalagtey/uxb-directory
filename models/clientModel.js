@@ -2,13 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const roleSchema = new Schema({
+const clientSchema = new Schema({
    name: { type: String, required: true },
-   status: { type: String, default: 'active' },
-   permissions: [
-      module_id: { type: Schema.Types.ObjectId, ref: 'Module', required: true },
-      access: { type: Array, required: true }
-   ],
    created_at: { type: Date, default: Date.now() },
    created_by: { type: Number },
    updated_at: { type: Date, default: null },
@@ -17,24 +12,24 @@ const roleSchema = new Schema({
    deleted_by: { type: Number, default: null }
 });
 
-roleSchema.statics = {
+clientSchema.statics = {
    isValid(id) {
       return this.findById(id)
-         .then(role => {
-            if (!role) {
-               return Promise.reject('Role not found');
+         .then(client => {
+            if (!client) {
+               return Promise.reject('Client not found');
             }
          })
    },
-
+   
    isNameAlreadyExist(name) {
       return this.exists({ name: name, deleted_at: null })
-         .then(role => {
-            if (role) {
-               return Promise.reject('Role name already in use');
+         .then(client => {
+            if (client) {
+               return Promise.reject('Name already in use');
             }
          })
    }
 }
 
-module.exports = mongoose.model('Role', roleSchema);
+module.exports = mongoose.model('Client', clientSchema);

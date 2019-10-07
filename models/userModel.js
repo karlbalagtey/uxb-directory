@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-   client_id: { type: Number, required: true },
-   role_id: { type: Number, required: true },
+   client_id: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
+   role_id: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
    title: { type: String, default: null },
    first_name: { type: String, required: true },
    last_name: { type: String, required: true },
@@ -20,7 +20,6 @@ const userSchema = new Schema({
 });
 
 userSchema.statics = {
-
    isValid(id) {
       return this.findById(id)
          .then(user => {
@@ -29,6 +28,7 @@ userSchema.statics = {
             }
          })
    },
+   
    isEmailAlreadyExist(email) {
       return this.exists({ email: email, deleted_at: null })
          .then(user => {
