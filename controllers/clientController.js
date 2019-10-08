@@ -15,6 +15,7 @@ exports.getClient = (req, res, next) => {
     const clientId = req.params.clientId;
 
     Client.findOne({ "_id": clientId, deleted_at: null })
+        .populate('users')
         .then(client => {
             return res.status(200).json(client);
         })
@@ -75,11 +76,11 @@ exports.storeClient = (req, res, next) => {
 /**
  * Update specified client details 
  */
-exports.updateclient = (req, res, next) => {
+exports.updateClient = (req, res, next) => {
 
     const errors = validationResult(req);
 
-    if (errors.isEmpty()) {
+    if (errors.isEmpty()) { 
 
         const clientId = req.params.clientId;
         const name = req.body.name;
@@ -102,8 +103,13 @@ exports.updateclient = (req, res, next) => {
                             });
                         } else {
                             try {
-                                const updatedclient = updateClientRequest.data(client, req);
+                                const updatedClient = updateClientRequest.data(client, req);
                                 updatedClient.save();
+
+                                res.status(200).json({
+                                    message: 'Client details updated successfully.',
+                                    client: updatedClient
+                                });
 
                             } catch (err) {
                                 res.status(500).json({
@@ -111,10 +117,7 @@ exports.updateclient = (req, res, next) => {
                                 });
                             }
 
-                            res.status(200).json({
-                                message: 'Client details updated successfully.',
-                                client: updatedClient
-                            });
+                            
                         }
 
                     })

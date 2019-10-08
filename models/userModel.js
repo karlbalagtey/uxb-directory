@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
    client_id: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
-   role_id: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
+   role_id: { type: Number, required: true },
    title: { type: String, default: null },
    first_name: { type: String, required: true },
    last_name: { type: String, required: true },
@@ -36,7 +36,9 @@ userSchema.statics = {
                return Promise.reject('E-mail already in use');
             }
          })
-   }
+   },
+
+   
 }
 
 module.exports = mongoose.model('User', userSchema);

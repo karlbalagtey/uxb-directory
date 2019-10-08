@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 
 // User model
 const User = require('../models/userModel');
+const Client = require('../models/clientModel');
 
 /**
  * Validate request
@@ -10,7 +11,7 @@ const User = require('../models/userModel');
 exports.validate = () => {
 
     return [
-        body('client_id').exists(),
+        body('client_id').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
         body('role_id').exists(),
         body('title').optional(),
         body('first_name').exists(),
@@ -25,7 +26,7 @@ exports.validate = () => {
  */
 exports.data = (req) => {
 
-    const client = 1;
+    const client = req.body.client_id;
     const role = 2;
     const title = req.body.title;
     const first_name = req.body.first_name;

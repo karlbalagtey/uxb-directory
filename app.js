@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 
+const clientRoutes = require('./routes/clientRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 app.use(bodyParser.json());
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
   });
 
 // Routes
+app.use(clientRoutes);
 app.use(userRoutes);
 
 // Error handling 
@@ -35,7 +37,7 @@ mongoose.connect('mongodb+srv://hmtareque:hasan076@cluster0-mhyrp.mongodb.net/ux
     useUnifiedTopology: true
 })
 .then(result => {
-    console.log('server running ...');
+   // console.log('server running ...');
     app.listen(3000);
 }).catch(err => {
     console.log(err);

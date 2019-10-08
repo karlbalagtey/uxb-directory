@@ -31,6 +31,8 @@ exports.data = (user, req) => {
     const updated_last_name = req.body.last_name;
     const updated_email = req.body.email;
 
+    
+
     user.client_id = updated_client;
     user.role_id = updated_role;
     user.title = updated_title;

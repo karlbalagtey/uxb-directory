@@ -9,7 +9,7 @@ const Client = require('../models/clientModel');
 exports.validate = () => {
 
     return [
-        body('name').exists().isEmail().custom(name => Client.isNameAlreadyExist(name)),
+        body('name').exists().custom(name => Client.isNameAlreadyExist(name)),
     ];
 }
 

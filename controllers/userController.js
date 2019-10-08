@@ -6,6 +6,7 @@ const updateUserRequest = require('../requests/updateUserRequest');
 
 // Models
 const User = require('../models/userModel');
+const Client = require('../models/clientModel');
 
 /**
  * Returns specified user
@@ -50,21 +51,33 @@ exports.storeUser = (req, res, next) => {
 
     if (errors.isEmpty()) {
 
-        const newUser = storeUserRequest.data(req);
-        const user = new User(newUser);
-
         try {
-            user.save();
+            const newUser = storeUserRequest.data(req);
+            const user = new User(newUser);
+
+            Client.findById(user.client_id)
+            .then(client => {
+
+                client.users.push(user.id);
+                client.save();
+                user.save();
+
+                res.status(201).json({
+                    message: 'User created successfully.',
+                    user: user
+                });
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error: 'failed'
+                });
+            })
+
         } catch (err) {
             res.status(500).json({
-                error: err
+                error: 'failed 3'
             });
         }
-
-        res.status(201).json({
-            message: 'User created successfully.',
-            user: user
-        });
 
     } else {
         res.status(422).json(errors);
@@ -103,7 +116,25 @@ exports.updateUser = (req, res, next) => {
                         } else {
                             try {
                                 const updatedUser = updateUserRequest.data(user, req);
+
+
+                                // update client if required 
+                                Client.
+                                findById(updatedUser.client_id).
+                                exec(function(err, client){
+                                    test;
+                                    if(err) return handleError(err);
+
+                                });
+                                
+
+
+
                                 updatedUser.save();
+                                res.status(200).json({
+                                    message: 'User details updated successfully.',
+                                    user: updatedUser
+                                });
 
                             } catch (err) {
                                 res.status(500).json({
@@ -111,10 +142,7 @@ exports.updateUser = (req, res, next) => {
                                 });
                             }
 
-                            res.status(200).json({
-                                message: 'User details updated successfully.',
-                                user: updateUser
-                            });
+                            
                         }
 
                     })
