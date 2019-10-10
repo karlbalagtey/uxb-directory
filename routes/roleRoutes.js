@@ -20,13 +20,13 @@ router.get('/roles', roleController.getRoles);
 /**
  * Store newly created role
  */ 
-router.post('/roles', storeroleRequest.validate(), roleController.storeRole);
+router.post('/roles', storeRoleRequest.validate(), roleController.storeRole);
 
 
 /**
  * Update a specified role
  */
-router.put('/roles/:roleId', updateroleRequest.validate(), roleController.updateRole);
+router.put('/roles/:roleId', updateRoleRequest.validate(), roleController.updateRole);
 
 
 /**

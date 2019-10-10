@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 
 const clientRoutes = require('./routes/clientRoutes');
+const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use(clientRoutes);
+app.use(roleRoutes);
 app.use(userRoutes);
 
 // Error handling 

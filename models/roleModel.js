@@ -6,10 +6,10 @@ const roleSchema = new Schema({
    client_id: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
    name: { type: String, required: true },
    status: { type: String, default: 'active' },
-   permissions: [
-      module_id: { type: Schema.Types.ObjectId, ref: 'Module', required: true },
+   permissions: [{
+      module: { type: String, required: true },
       access: { type: Array, required: true }
-   ],
+   }],
    created_at: { type: Date, default: Date.now() },
    created_by: { type: Number },
    updated_at: { type: Date, default: null },

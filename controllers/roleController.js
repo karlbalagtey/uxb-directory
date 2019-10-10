@@ -51,21 +51,23 @@ exports.storeRole = (req, res, next) => {
 
     if (errors.isEmpty()) {
 
-        const newRole = storeRoleRequest.data(req);
-        const role = new Role(newRole);
-
         try {
+            const newRole = storeRoleRequest.data(req);
+            const role = new Role(newRole);
             role.save();
+
+            res.status(201).json({
+                message: 'Role created successfully.',
+                role: role
+            });
+            
         } catch (err) {
             res.status(500).json({
                 error: err
             });
         }
 
-        res.status(201).json({
-            message: 'Role created successfully.',
-            role: role
-        });
+        
 
     } else {
         res.status(422).json(errors);
