@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const roleSchema = new Schema({
+   client_id: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
    name: { type: String, required: true },
    status: { type: String, default: 'active' },
    permissions: [
