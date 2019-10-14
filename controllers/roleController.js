@@ -60,14 +60,14 @@ exports.storeRole = (req, res, next) => {
                 message: 'Role created successfully.',
                 role: role
             });
-            
+
         } catch (err) {
             res.status(500).json({
                 error: err
             });
         }
 
-        
+
 
     } else {
         res.status(422).json(errors);
@@ -82,15 +82,16 @@ exports.updateRole = (req, res, next) => {
 
     const errors = validationResult(req);
 
-    if (errors.isEmpty()) { 
+    if (errors.isEmpty()) {
 
         const roleId = req.params.roleId;
         const name = req.body.name;
 
-       Role.findById(roleId)
-            .then(role => {
+        Role.
+            findOne({ "_id": roleId, deleted_at: null }).
+            then(role => {
 
-               Role.findOne({ "_id": { $ne: roleId }, name: name, deleted_at: null })
+                Role.findOne({ "_id": { $ne: roleId }, name: name, deleted_at: null })
                     .then(result => {
                         return result;
                     })
@@ -125,8 +126,8 @@ exports.updateRole = (req, res, next) => {
                             errors: err
                         });
                     });
-            })
-            .catch(err => {
+            }).
+            catch(err => {
                 res.status(500).json({
                     errors: err
                 });

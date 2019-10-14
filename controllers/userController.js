@@ -99,7 +99,7 @@ exports.updateUser = (req, res, next) => {
         const userId = req.params.userId;
         const email = req.body.email;
 
-        User.findById(userId)
+        User.findOne({ "_id": userId, deleted_at: null })
             .then(user => {
 
                 User.findOne({ "_id": { $ne: userId }, email: email, deleted_at: null })
@@ -119,7 +119,6 @@ exports.updateUser = (req, res, next) => {
                             try {
                                 const updatedUser = updateUserRequest.data(user, req);
 
-
                                 // update client if required 
                                 Client.
                                 findById(updatedUser.client_id).
@@ -129,9 +128,6 @@ exports.updateUser = (req, res, next) => {
 
                                 });
                                 
-
-
-
                                 updatedUser.save();
                                 res.status(200).json({
                                     message: 'User details updated successfully.',
@@ -143,10 +139,7 @@ exports.updateUser = (req, res, next) => {
                                     errors: err
                                 });
                             }
-
-                            
                         }
-
                     })
                     .catch(err => {
                         res.status(500).json({
@@ -196,4 +189,3 @@ exports.deleteUser = (req, res, next) => {
             });
         });
 }
-

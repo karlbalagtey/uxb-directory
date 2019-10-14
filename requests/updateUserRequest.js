@@ -10,8 +10,8 @@ exports.validate = () => {
 
     return [ 
         check('userId').exists().isMongoId().custom(userId => User.isValid(userId)),
-        body('client_id').exists(),
-        body('role_id').exists(),
+        body('client').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
+        body('role').exists().isMongoId().custom(roleId => Role.isValid(roleId)),
         body('title').optional(),
         body('first_name').exists(),
         body('last_name').exists(),
@@ -24,14 +24,12 @@ exports.validate = () => {
  */
 exports.data = (user, req) => {
 
-    const updated_client = 1;
-    const updated_role = 2;
+    const updated_client = req.body.client;
+    const updated_role = req.body.role;
     const updated_title = req.body.title;
     const updated_first_name = req.body.first_name;
     const updated_last_name = req.body.last_name;
     const updated_email = req.body.email;
-
-    
 
     user.client_id = updated_client;
     user.role_id = updated_role;
