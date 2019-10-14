@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 // User model
 const User = require('../models/userModel');
 const Client = require('../models/clientModel');
+const Role = require('../models/roleModel');
 
 /**
  * Validate request
@@ -11,8 +12,8 @@ const Client = require('../models/clientModel');
 exports.validate = () => {
 
     return [
-        body('client_id').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
-        body('role_id').exists(),
+        body('client').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
+        body('role').exists().isMongoId().custom(roleId => Role.isValid(roleId)),
         body('title').optional(),
         body('first_name').exists(),
         body('last_name').exists(),
@@ -26,8 +27,8 @@ exports.validate = () => {
  */
 exports.data = (req) => {
 
-    const client = req.body.client_id;
-    const role = 2;
+    const client = req.body.client;
+    const role = req.body.role;
     const title = req.body.title;
     const first_name = req.body.first_name;
     const last_name = req.body.last_name;
@@ -37,8 +38,8 @@ exports.data = (req) => {
     var hash = bcrypt.hashSync(password, 8);
 
     const user = {
-        client_id: client,
-        role_id: role,
+        client: client,
+        role: role,
         title: title,
         first_name: first_name,
         last_name: last_name,

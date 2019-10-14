@@ -7,6 +7,7 @@ const updateUserRequest = require('../requests/updateUserRequest');
 // Models
 const User = require('../models/userModel');
 const Client = require('../models/clientModel');
+const Role = require('../models/roleModel');
 
 /**
  * Returns specified user
@@ -16,6 +17,7 @@ exports.getUser = (req, res, next) => {
     const userId = req.params.userId;
 
     User.findOne({ "_id": userId, deleted_at: null })
+        .populate('role')
         .then(user => {
             return res.status(200).json(user);
         })
@@ -55,7 +57,7 @@ exports.storeUser = (req, res, next) => {
             const newUser = storeUserRequest.data(req);
             const user = new User(newUser);
 
-            Client.findById(user.client_id)
+            Client.findById(user.client)
             .then(client => {
 
                 client.users.push(user.id);
