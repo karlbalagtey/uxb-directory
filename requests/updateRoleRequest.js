@@ -12,6 +12,7 @@ exports.validate = () => {
         check('client_id').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
         body('name').exists(),
         check('status').isIn(['active', 'inactive']),
+        body('permissions').exists()
        ]; 
 }
 
