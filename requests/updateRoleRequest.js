@@ -9,24 +9,26 @@ const Client = require('../models/clientModel');
 exports.validate = () => {
 
     return [ 
-        // check('clientId').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
-        // body('name').exists(),
-        // check('status').isIn(['active', 'inactive']),
+        check('client_id').exists().isMongoId().custom(clientId => Client.isValid(clientId)),
+        body('name').exists(),
+        check('status').isIn(['active', 'inactive']),
        ]; 
 }
 
 /**
- * Existing client's updated data
+ * Existing role's updated data
  */
-exports.data = (client, req) => {
+exports.data = (role, req) => {
 
     const updated_name = req.body.name;
+    const updated_permissions = req.body.permissions;
     const updated_status = req.body.status;
 
-    client.name = updated_name;
-    client.status = updated_status;
-    client.updated_at = Date.now();
-    client.updated_by = 1;
+    role.name = updated_name;
+    role.permissions = updated_permissions;
+    role.status = updated_status;
+    role.updated_at = Date.now();
+    role.updated_by = 1;
 
-    return client;
+    return role;
 }
