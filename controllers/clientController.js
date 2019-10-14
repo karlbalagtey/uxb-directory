@@ -116,7 +116,6 @@ exports.updateClient = (req, res, next) => {
                                     errors: err
                                 });
                             }
-
                             
                         }
 
