@@ -8,6 +8,9 @@ const clientRoutes = require('./routes/clientRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
 
+require('dotenv').config();
+const MONGODB_URI = process.env.MONGO_DB_URI;
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -34,7 +37,7 @@ app.use((error, req, res, next) => {
     res.status(status).json({ message: message, data: data });
 });
 
-mongoose.connect('mongodb+srv://hmtareque:hasan076@cluster0-mhyrp.mongodb.net/uxb_directory?retryWrites=true&w=majority', { 
+mongoose.connect(MONGODB_URI, { 
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
